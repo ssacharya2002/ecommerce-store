@@ -19,7 +19,7 @@ const Summary = () => {
       toast.success("Payment completed");
       removeAll();
     }
-    if (searchParams.get("cancelled")) {
+    if (searchParams.get("canceled")) {
       toast.error("Something went wrong.");
     }
   },[searchParams,removeAll]);
@@ -29,14 +29,20 @@ const Summary = () => {
   }, 0);
 
   const onCheckout = async () => {
+
+      
+
     const response = await axios.post(
-      `&{process.env.NEXT_PUBLIC_API_URL}/checkout`,
+      `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
       {
-        productsId: items.map((item) => item.id),
+        productIds: items.map((item) => item.id),
       }
     );
 
-    window.location = response.data.url;
+    // console.log("response = ",await response.data);
+    
+
+    window.location =await response.data.url;
   };
 
   return (
@@ -50,7 +56,7 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      <Button onClick={onCheckout} className="w-full mt-6">
+      <Button disabled={items.length === 0} onClick={onCheckout} className="w-full mt-6">
         Checkout
       </Button>
     </div>
